@@ -18,6 +18,8 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
 
+  bool isLoading = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,12 +83,17 @@ class _LoginScreenState extends State<LoginScreen> {
                         foregroundColor: Colors.white,
                         backgroundColor: Colors.deepPurpleAccent,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
                         if (userLoginForm.currentState!.validate()) {
-                          LoginController.loginAccount(
+                          isLoading = true;
+                          setState(() {});
+                          await LoginController.loginAccount(
                               context: context,
                               email: email.text,
                               password: password.text);
+
+                          isLoading = false;
+                          setState(() {});
                         }
                         // Navigator.pushAndRemoveUntil(
                         //     context,
@@ -96,7 +103,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         //   return false;
                         // });
                       },
-                      child: const Text("Sign In"),
+                      child: isLoading
+                          ? Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            )
+                          : Text("Sign In"),
                     ),
                   ),
                 ],

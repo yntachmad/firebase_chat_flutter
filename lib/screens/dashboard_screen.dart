@@ -1,4 +1,5 @@
 import 'package:firebase_chat/providers/user_provider.dart';
+import 'package:firebase_chat/screens/chatroom_screen.dart';
 import 'package:firebase_chat/screens/profile_screen.dart';
 import 'package:firebase_chat/screens/splash_screen.dart';
 import 'package:flutter/foundation.dart';
@@ -21,6 +22,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   var db = FirebaseFirestore.instance;
 
   List<Map<String, dynamic>> chatRoomList = [];
+  List<String> chatRoomIds = [];
 
   void getChatRooms() {
     db.collection("chatrooms").get().then(
@@ -29,6 +31,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           chatRoomList.add(
             singleChatRoomData.data(),
           );
+          chatRoomIds.add(singleChatRoomData.id.toString());
         }
         setState(() {});
       },
@@ -43,7 +46,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var userDetail = Provider.of<UserProvider>(context);
+    // var userDetail = Provider.of<UserProvider>(context);
 
     var userProvider = Provider.of<UserProvider>(context);
 
@@ -126,6 +129,17 @@ class _DashboardScreenState extends State<DashboardScreen> {
         itemCount: chatRoomList.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ChatroomScreen(
+                      chatRoomName: (chatRoomList[index]["chatroom_name"] ?? "")
+                          .toString(),
+                      chatRoomId: chatRoomIds[index]),
+                ),
+              );
+            },
             leading: CircleAvatar(
               backgroundColor: Colors.blueGrey[900],
               child: const Text(

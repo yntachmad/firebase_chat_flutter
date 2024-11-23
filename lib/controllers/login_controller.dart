@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_chat/screens/dashboard_screen.dart';
+import 'package:firebase_chat/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 
 class LoginController {
@@ -14,7 +15,7 @@ class LoginController {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(
-            builder: (context) => const DashboardScreen(),
+            builder: (context) => const SplashScreen(),
           ), (route) {
         return false;
       });
